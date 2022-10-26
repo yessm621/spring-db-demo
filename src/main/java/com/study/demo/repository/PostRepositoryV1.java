@@ -1,19 +1,26 @@
 package com.study.demo.repository;
 
-import com.study.demo.connection.DBConnectionUtil;
 import com.study.demo.entity.Post;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.support.JdbcUtils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.sql.DataSource;
+import java.sql.*;
 import java.util.NoSuchElementException;
 
 @Slf4j
-public class PostRepositoryV0 {
+public class PostRepositoryV1 {
+
+    private final DataSource dataSource;
+
+    // 의존관계주입. DataSource는 인터페이스이므로
+    // DriverManagerDataSource -> HikariDataSource로 변경되어도 PostRepositoryV1은 변경되지 않는다.
+    public PostRepositoryV1(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
     public Post save(Post post) throws SQLException {
-        String sql = "insert into post(id, content, view_cnt) values (?,?,?)";
+        String sql = "insert into post(id, content, view_cnt) values (?, ?, ?)";
 
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -101,33 +108,16 @@ public class PostRepositoryV0 {
         }
     }
 
-    private void close(Connection con, PreparedStatement pstmt, ResultSet rs) {
-        if (rs != null) {
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        if (pstmt != null) {
-            try {
-                pstmt.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        if (con != null) {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    private void close(Connection con, Statement stmt, ResultSet rs) {
+        JdbcUtils.closeResultSet(rs);
+        JdbcUtils.closeStatement(stmt);
+        JdbcUtils.closeConnection(con);
     }
 
-    private Connection getConnection() {
-        return DBConnectionUtil.getConnection();
+
+    private Connection getConnection() throws SQLException {
+        Connection con = dataSource.getConnection();
+        log.info("get connection={}, class={}", con, con.getClass());
+        return con;
     }
 }

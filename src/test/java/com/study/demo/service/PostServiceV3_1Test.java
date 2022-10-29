@@ -30,8 +30,10 @@ class PostServiceV3_1Test {
     @BeforeEach
     void before() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource(URL, USERNAME, PASSWORD);
+        // PlatformTransactionManager의 구현체
         DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
         postRepository = new PostRepositoryV3(dataSource);
+        // PlatformTransactionManager에 transactionManager 주입
         postService = new PostServiceV3_1(transactionManager, postRepository);
     }
 

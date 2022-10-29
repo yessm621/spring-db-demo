@@ -15,11 +15,13 @@ import java.sql.SQLException;
 @RequiredArgsConstructor
 public class PostServiceV3_1 {
 
+    // 트랜잭션 매니저 주입 받음
     private final PlatformTransactionManager transactionManager;
     private final PostRepositoryV3 postRepository;
 
     public void accountTransfer(Long fromId, Long toId, int cnt) throws SQLException {
 
+        // 트랜잭션 시작. 트랜잭션의 상태정보를 반환. 이 정보는 트랜잭션 커밋, 롤백 시 필요
         TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
 
         try {
@@ -43,18 +45,6 @@ public class PostServiceV3_1 {
     private void validation(Post post) {
         if (post.getId().equals(3L)) {
             throw new IllegalStateException("예외 발생");
-        }
-    }
-
-    private void release(Connection con) {
-        if (con != null) {
-            try {
-                // 기본값인 자동 커밋 모드로 변경해야 한다.
-                con.setAutoCommit(true);
-                con.close();
-            } catch (Exception e) {
-                log.info("error", e);
-            }
         }
     }
 }

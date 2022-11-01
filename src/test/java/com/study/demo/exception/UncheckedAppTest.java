@@ -58,6 +58,7 @@ public class UncheckedAppTest {
                 runSQL();
             } catch (SQLException e) {
                 throw new RuntimeSQLException(e);
+//                throw new RuntimeSQLException();
             }
         }
 
@@ -73,6 +74,9 @@ public class UncheckedAppTest {
     }
 
     static class RuntimeSQLException extends RuntimeException {
+//        public RuntimeSQLException() {
+//        }
+
         public RuntimeSQLException(Throwable cause) {
             super(cause);
         }

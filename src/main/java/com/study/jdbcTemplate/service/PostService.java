@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface PostService {
     Post save(Post Post);
 
-    void update(Long PostId, PostDto updateParam);
+    void update(Long PostId, PostDto postDto);
 
     Optional<Post> findById(Long id);
 

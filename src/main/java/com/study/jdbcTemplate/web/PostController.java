@@ -54,8 +54,8 @@ public class PostController {
     }
 
     @PostMapping("/{postId}/edit")
-    public String edit(@PathVariable Long postId, @ModelAttribute PostDto updateParam) {
-        postService.update(postId, updateParam);
+    public String edit(@PathVariable Long postId, @ModelAttribute PostDto postDto) {
+        postService.update(postId, postDto);
         return "redirect:/posts/{postId}";
     }
 }

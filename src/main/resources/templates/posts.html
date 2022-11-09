@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container" style="max-width: 600px">
+    <div class="py-5 text-center">
+        <h2>게시글 목록</h2>
+    </div>
+
+    <form th:object="${postSearch}" method="get" class="form-inline">
+    <div class="row">
+        <div class="col">
+            <input type="text" th:field="*{postName}" class="form-control" placeholder="내용"/>
+        </div>
+        <div class="col">
+            <input type="text" th:field="*{maxViewCnt}" class="form-control" placeholder="가격제한"/>
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-secondary mb-2">검색</button>
+        </div>
+        <div class="col">
+        </div>
+        <div class="col">
+            <div class="col">
+                <button class="btn btn-primary float-end"
+                        onclick="location.href='addForm.html'"
+                        th:onclick="|location.href='@{/posts/add}'|"
+                        type="button">상품 등록
+                </button>
+            </div>
+        </div>
+    </div>
+
+    </form>
+
+    <hr class="my-4">
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>상품명</th>
+                <th>가격</th>
+                <th>수량</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="post : ${posts}">
+                <td><a href="post.html" th:href="@{/posts/{postId}(postId=${post.id})}" th:text="${post.id}">회원id</a>
+                </td>
+                <td><a href="post.html" th:href="@{|/posts/${post.id}|}" th:text="${post.postName}">상품명</a></td>
+                <td th:text="${post.quantity}">10</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div> <!-- /container -->
+
+</body>
+</html>
